@@ -13,7 +13,7 @@ import android.graphics.Color
 
 val nodes : Int = 4
 
-fun Canvas.drawSSINode(i : Int, scale : Float, paint : Paint) {
+fun Canvas.drawSSINode(i : Int, scale : Float,cb : () -> Unit, paint : Paint) {
     val w : Float = width.toFloat()
     val h : Float = height.toFloat()
     val gap : Float = w * 0.8f / nodes
@@ -28,7 +28,11 @@ fun Canvas.drawSSINode(i : Int, scale : Float, paint : Paint) {
     save()
     translate(gap * i + gap / 2 + gap * sc2, h / 2)
     rotate(i * deg)
-    drawLine(x, -size / 2, x, -size / 2 + 2 * size * sc2, paint)
+    drawLine(x, -size / 2, x, -size / 2 + 2 * size * sc1, paint)
+    restore()
+    save()
+    translate(gap * sc2, 0f)
+    cb()
     restore()
 }
 
@@ -115,7 +119,9 @@ class SquareSideIncView(ctx : Context) : View(ctx) {
         }
 
         fun draw(canvas : Canvas, paint : Paint) {
-            canvas.drawSSINode(i, state.scale, paint)
+            canvas.drawSSINode(i, state.scale, {
+                prev?.draw(canvas, paint)
+            }, paint)
         }
 
         fun update(cb : (Int, Float) -> Unit) {
