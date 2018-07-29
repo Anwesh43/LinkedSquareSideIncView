@@ -9,8 +9,26 @@ import android.content.Context
 import android.view.MotionEvent
 import android.graphics.Paint
 import android.graphics.Canvas
+import android.graphics.Color
 
-val nodes : Int = 5
+val nodes : Int = 4
+
+fun Canvas.drawSSINode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = w * 0.8f / nodes
+    val deg : Float = 360f / nodes
+    val size : Float = gap / 4
+    paint.strokeWidth = Math.min(w, h) / 50
+    paint.strokeCap = Paint.Cap.ROUND
+    paint.color = Color.parseColor("#673AB7")
+    val x : Float = (size/2) / (Math.tan((deg / 2) * (Math.PI / 180)).toFloat())
+    save()
+    translate(gap * i + gap / 2, h / 2)
+    rotate(i * deg)
+    drawLine(x, -size / 2, x, size / 2, paint)
+    restore()
+}
 
 class SquareSideIncView(ctx : Context) : View(ctx) {
 
