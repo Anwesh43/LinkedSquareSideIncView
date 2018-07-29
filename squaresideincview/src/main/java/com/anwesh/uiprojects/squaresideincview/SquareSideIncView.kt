@@ -171,4 +171,27 @@ class SquareSideIncView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : SquareSideIncView) {
+
+        private val linkedSSI : LinkedSSI = LinkedSSI(0)
+
+        private val animator : Animator = Animator(view)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(Color.parseColor("#212121"))
+            linkedSSI.draw(canvas, paint)
+            animator.animate {
+                linkedSSI.update {i, scale ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            linkedSSI.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
