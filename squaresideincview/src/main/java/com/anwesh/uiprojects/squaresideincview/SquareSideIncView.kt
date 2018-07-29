@@ -22,11 +22,13 @@ fun Canvas.drawSSINode(i : Int, scale : Float, paint : Paint) {
     paint.strokeWidth = Math.min(w, h) / 50
     paint.strokeCap = Paint.Cap.ROUND
     paint.color = Color.parseColor("#673AB7")
+    val sc1 : Float = Math.min(0.5f, scale) * 2
+    val sc2 : Float = Math.min(0.5f, Math.max(0f, scale - 0.5f)) * 2
     val x : Float = (size/2) / (Math.tan((deg / 2) * (Math.PI / 180)).toFloat())
     save()
-    translate(gap * i + gap / 2, h / 2)
+    translate(gap * i + gap / 2 + gap * sc2, h / 2)
     rotate(i * deg)
-    drawLine(x, -size / 2, x, size / 2, paint)
+    drawLine(x, -size / 2, x, -size / 2 + 2 * size * sc2, paint)
     restore()
 }
 
@@ -92,6 +94,50 @@ class SquareSideIncView(ctx : Context) : View(ctx) {
             if (animated) {
                 animated = false
             }
+        }
+    }
+
+    data class SSINode(var i : Int, val state : State = State()) {
+
+        private var next : SSINode? = null
+
+        private var prev : SSINode? = null
+
+        init {
+            addNeighbor()
+        }
+
+        fun addNeighbor() {
+            if (i < nodes - 1) {
+                next = SSINode(i + 1)
+                next?.prev = this
+            }
+        }
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            canvas.drawSSINode(i, state.scale, paint)
+        }
+
+        fun update(cb : (Int, Float) -> Unit) {
+            state.update {
+                cb(i, it)
+            }
+        }
+
+        fun startUpdating(cb : () -> Unit) {
+            state.startUpdating(cb)
+        }
+
+        fun getNext(dir : Int, cb : () -> Unit) : SSINode {
+            var curr : SSINode? = prev
+            if (dir == 1) {
+                curr = next
+            }
+            if (curr != null) {
+                return curr
+            }
+            cb()
+            return this
         }
     }
 }
