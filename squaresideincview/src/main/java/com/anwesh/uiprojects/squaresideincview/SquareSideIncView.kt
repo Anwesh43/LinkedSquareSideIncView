@@ -4,6 +4,7 @@ package com.anwesh.uiprojects.squaresideincview
  * Created by anweshmishra on 30/07/18.
  */
 
+import android.app.Activity
 import android.view.View
 import android.content.Context
 import android.view.MotionEvent
@@ -194,6 +195,14 @@ class SquareSideIncView(ctx : Context) : View(ctx) {
             linkedSSI.startUpdating {
                 animator.start()
             }
+        }
+    }
+
+    companion object {
+        fun create(activity : Activity) : SquareSideIncView {
+            val view : SquareSideIncView = SquareSideIncView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
