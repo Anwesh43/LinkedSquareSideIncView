@@ -20,7 +20,7 @@ fun Canvas.drawSSINode(i : Int, scale : Float,cb : () -> Unit, paint : Paint) {
     val h : Float = height.toFloat()
     val gap : Float = w * 0.8f / nodes
     val deg : Float = 360f / nodes
-    val size : Float = gap / 4
+    val size : Float = gap / 2
     paint.strokeWidth = Math.min(w, h) / 50
     paint.strokeCap = Paint.Cap.ROUND
     paint.color = Color.parseColor("#673AB7")
@@ -30,7 +30,7 @@ fun Canvas.drawSSINode(i : Int, scale : Float,cb : () -> Unit, paint : Paint) {
     save()
     translate(gap * i + gap / 2 + gap * sc2, h / 2)
     rotate(i * deg)
-    drawLine(x, -size / 2, x, -size / 2 + 2 * size * sc1, paint)
+    drawLine(x, -size / 2, x, -size / 2 + size * sc1, paint)
     restore()
     save()
     translate(gap * sc2, 0f)
@@ -83,7 +83,7 @@ class SquareSideIncView(ctx : Context) : View(ctx) {
             if (animated) {
                 cb()
                 try {
-                    Thread.sleep(50)
+                    Thread.sleep(30)
                     view.invalidate()
                 } catch(ex : Exception) {
 
